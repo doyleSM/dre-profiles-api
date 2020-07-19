@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
 from profiles_api import serializers
+from profiles_api import models
 
 
 class HelloApiView(APIView):
@@ -90,3 +91,10 @@ class HelloViewSets(viewsets.ViewSet):
     def destroy(self, request, pk=None):
         """Retrieve and return one resource"""
         return Response({"method": "Destroy"})
+
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    """Handle management UserProfiles"""
+
+    serializer_class = serializers.UserProfileSerializer
+    queryset = models.UserProfile.objects.filter(is_active=True)

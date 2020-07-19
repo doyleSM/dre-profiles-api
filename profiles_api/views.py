@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-
+from rest_framework import viewsets
 from profiles_api import serializers
 
 
@@ -45,3 +45,48 @@ class HelloApiView(APIView):
     def delete(self, request, pk=None):
         """Delete the object"""
         return Response({"method": "DELETE"})
+
+
+class HelloViewSets(viewsets.ViewSet):
+    """Test APIViewSet"""
+
+    serializer_class = serializers.HelloSerializer
+
+    def list(self, request):
+        """Return Hello message"""
+        an_apiview = [
+            'Uses actions list, create, retrieve, update, partial_update, destroy',
+            'Automatically maps to URL using routers',
+            'more funcionalitty with less code'
+        ]
+        return Response({'message': 'Hello!', 'an_apiview': an_apiview})
+
+    def create(self, request):
+        """Create new Hello message"""
+
+        serializer = self.serializer_class(data=request.data)
+
+        if serializer.is_valid():
+            name = serializer.validated_data.get("name")
+            message = f"Hello {name}, from viewset"
+            return Response({"message": message})
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    def retrieve(self, request, pk=None):
+        """Retrieve and return one resource"""
+        return Response({"method": "Retrieve"})
+
+    def update(self, request, pk=None):
+        """Retrieve and return one resource"""
+        return Response({"method": "update"})
+
+    def partial_update(self, request, pk=None):
+        """Retrieve and return one resource"""
+        return Response({"method": "partial_update"})
+
+    def destroy(self, request, pk=None):
+        """Retrieve and return one resource"""
+        return Response({"method": "Destroy"})
